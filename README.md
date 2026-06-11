@@ -215,6 +215,9 @@ MIT — see [LICENSE](LICENSE)
 
 ---
 
+<img width="1778" height="761" alt="Screenshot 2026-06-11 at 5 34 41 PM" src="https://github.com/user-attachments/assets/5b2f5eba-e81c-4e32-b8cb-fc08da4d1377" />
+
+
 ## Acknowledgements
 
 Built on top of [OpenClaw](https://openclaw.ai) — a multi-agent AI runtime for Telegram and beyond.

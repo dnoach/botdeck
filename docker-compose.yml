@@ -1,0 +1,53 @@
+services:
+  backend:
+    build: ./backend
+    container_name: botdeck-backend
+    restart: unless-stopped
+    # extra_hosts: uncomment and set your Docker bridge IP
+    # Find it with: docker network inspect botdeck_botdeck-net | grep Gateway
+    # extra_hosts:
+    #   - "dockerhost:YOUR_BRIDGE_IP"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - OPENCLAW_ROOT=/openclaw
+      - SESSION_SECRET=${SESSION_SECRET}
+      - DASHBOARD_PASSWORD=${DASHBOARD_PASSWORD}
+      - OPENCLAW_GATEWAY_URL=${OPENCLAW_GATEWAY_URL}
+      - OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}
+    volumes:
+      - ${OPENCLAW_ROOT:-/root/.openclaw}:/openclaw:rw
+    networks:
+      - botdeck-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build: ./frontend
+    container_name: botdeck-frontend
+    restart: unless-stopped
+    networks:
+      - botdeck-net
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:alpine
+    container_name: botdeck-nginx
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - botdeck-net
+    depends_on:
+      - frontend
+      - backend
+
+networks:
+  botdeck-net:
+    driver: bridge

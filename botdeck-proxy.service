@@ -1,0 +1,19 @@
+[Unit]
+Description=BotDeck Chat Proxy
+Documentation=https://github.com/yourusername/botdeck
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/node /opt/botdeck-proxy.js
+Restart=always
+RestartSec=5
+User=root
+Environment=OPENCLAW_CONFIG=/root/.openclaw/openclaw.json
+Environment=PROXY_PORT=3002
+Environment=GATEWAY_PORT=18789
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
